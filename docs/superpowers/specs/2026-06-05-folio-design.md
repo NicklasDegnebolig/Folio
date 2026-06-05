@@ -54,12 +54,12 @@ The `apps/docs` project (folio's own docs site) serves as both the documentation
 
 ### Package names
 
-| Package | Purpose |
-| --- | --- |
-| `folio` | Core Vite plugin + plain JS query API. Zero framework dependency. |
-| `@folio/vue` | Vue composables + `<FolioContent>` component |
-| `@folio/react` | (future) React hooks adapter |
-| `@folio/svelte` | (future) Svelte store adapter |
+| Package         | Purpose                                                           |
+| --------------- | ----------------------------------------------------------------- |
+| `folio`         | Core Vite plugin + plain JS query API. Zero framework dependency. |
+| `@folio/vue`    | Vue composables + `<FolioContent>` component                      |
+| `@folio/react`  | (future) React hooks adapter                                      |
+| `@folio/svelte` | (future) Svelte store adapter                                     |
 
 ---
 
@@ -146,9 +146,9 @@ interface ContentSource {
 }
 
 interface ContentFile {
-  filePath: string      // absolute path on disk (or remote URL)
-  contentPath: string   // resolved content path (e.g. /blog/my-post)
-  locale?: string       // derived from directory structure
+  filePath: string // absolute path on disk (or remote URL)
+  contentPath: string // resolved content path (e.g. /blog/my-post)
+  locale?: string // derived from directory structure
 }
 ```
 
@@ -181,12 +181,12 @@ Rules applied in this order:
 
 Examples:
 
-| File | Resolved path | Locale |
-| --- | --- | --- |
-| `content/blog/my-post.mdx` | `/blog/my-post` | — |
-| `content/en/blog/my-post.mdx` | `/blog/my-post` | `en` |
-| `content/da/index.mdx` | `/` | `da` |
-| `content/docs/intro.mdx` + frontmatter `path: /get-started` | `/get-started` | — |
+| File                                                        | Resolved path   | Locale |
+| ----------------------------------------------------------- | --------------- | ------ |
+| `content/blog/my-post.mdx`                                  | `/blog/my-post` | —      |
+| `content/en/blog/my-post.mdx`                               | `/blog/my-post` | `en`   |
+| `content/da/index.mdx`                                      | `/`             | `da`   |
+| `content/docs/intro.mdx` + frontmatter `path: /get-started` | `/get-started`  | —      |
 
 ---
 
@@ -223,10 +223,10 @@ interface ContentEntry {
     title?: string
     date?: string
     draft?: boolean
-    path?: string         // frontmatter path override
+    path?: string // frontmatter path override
     [key: string]: any
   }
-  body: () => Promise<Component>   // lazy — only compiles MDX when called
+  body: () => Promise<Component> // lazy — only compiles MDX when called
 }
 ```
 
@@ -469,12 +469,12 @@ export default defineConfig({
 
 Git hooks install automatically on `pnpm install` via `vp config`. No husky, no separate lint config files, no prettier config.
 
-| Tool | Role |
-| --- | --- |
-| `vite-plus` | Unified config — oxlint, oxfmt, staged checks, git hooks |
-| `tsdown` | Builds `packages/core` + `packages/vue` (ESM + CJS + `.d.ts`) |
-| `vitest` | Testing (part of Vite+) |
-| `pnpm workspaces` | Monorepo package management |
+| Tool              | Role                                                          |
+| ----------------- | ------------------------------------------------------------- |
+| `vite-plus`       | Unified config — oxlint, oxfmt, staged checks, git hooks      |
+| `tsdown`          | Builds `packages/core` + `packages/vue` (ESM + CJS + `.d.ts`) |
+| `vitest`          | Testing (part of Vite+)                                       |
+| `pnpm workspaces` | Monorepo package management                                   |
 
 ---
 
@@ -490,11 +490,14 @@ Public functions are contracts. Annotating them prevents accidental signature dr
 
 ```ts
 // Public — always annotate
-export function listContent(prefix: string, options?: ListOptions): Promise<ContentEntry[]>
+export function listContent(
+  prefix: string,
+  options?: ListOptions,
+): Promise<ContentEntry[]>
 
 // Internal — let TS infer
 function buildIndex(source: ContentSource) {
-  return source.listFiles().then(files => files.map(parseEntry))
+  return source.listFiles().then((files) => files.map(parseEntry))
 }
 ```
 
@@ -519,14 +522,17 @@ Enums generate runtime JS and can't be tree-shaken. Unions are zero-cost at runt
 export type ContentFormat = 'mdx' | 'md'
 
 // Avoid
-export enum ContentFormat { MDX = 'mdx', MD = 'md' }
+export enum ContentFormat {
+  MDX = 'mdx',
+  MD = 'md',
+}
 ```
 
 **4. `as const` + derived types for stable literals.**
 
 ```ts
 export const SUPPORTED_FORMATS = ['mdx', 'md'] as const
-export type ContentFormat = typeof SUPPORTED_FORMATS[number]
+export type ContentFormat = (typeof SUPPORTED_FORMATS)[number]
 // → 'mdx' | 'md' — stays in sync, never drifts
 ```
 
@@ -558,7 +564,9 @@ export function folio(options?: FolioOptions): Plugin {
 `ContentEntry` accepts an optional frontmatter shape. This is useful — consumers can type their own frontmatter without losing flexibility.
 
 ```ts
-export interface ContentEntry<T extends Record<string, unknown> = Record<string, unknown>> {
+export interface ContentEntry<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> {
   path: string
   locale?: string
   frontmatter: T
@@ -566,7 +574,11 @@ export interface ContentEntry<T extends Record<string, unknown> = Record<string,
 }
 
 // Consumer usage
-interface BlogFrontmatter { title: string; date: string; draft?: boolean }
+interface BlogFrontmatter {
+  title: string
+  date: string
+  draft?: boolean
+}
 const post = await getContent<BlogFrontmatter>('/blog/my-post')
 post.frontmatter.title // typed
 ```

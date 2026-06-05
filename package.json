@@ -2,11 +2,6 @@
   "name": "folio-monorepo",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@8.15.5",
-  "engines": {
-    "node": ">=22.12.0",
-    "pnpm": ">=8"
-  },
   "scripts": {
     "dev": "pnpm --filter @folio/docs dev",
     "build:packages": "tsdown",
@@ -14,9 +9,14 @@
     "prepare": "vp config"
   },
   "devDependencies": {
-    "vite-plus": "^0.1.24",
     "tsdown": "^0.22.2",
-    "vitest": "^4.1.8",
-    "typescript": "^5.8.0"
-  }
+    "typescript": "^5.8.0",
+    "vite-plus": "^0.1.24",
+    "vitest": "^4.1.8"
+  },
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=8"
+  },
+  "packageManager": "pnpm@8.15.5"
 }

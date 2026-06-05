@@ -89,6 +89,7 @@ apps/docs/
 ## Task 1: Monorepo scaffold
 
 **Files:**
+
 - Create: `pnpm-workspace.yaml`
 - Create: `package.json` (replace existing)
 - Create: `tsconfig.json`
@@ -161,9 +162,7 @@ packages:
 ```ts
 import { defineWorkspace } from 'vitest/config'
 
-export default defineWorkspace([
-  'packages/*/vitest.config.ts',
-])
+export default defineWorkspace(['packages/*/vitest.config.ts'])
 ```
 
 - [ ] **Step 6: Move existing folio docs app files into `apps/docs/`**
@@ -242,6 +241,7 @@ git commit -m "chore: init monorepo scaffold, move folio docs app to apps/docs"
 ## Task 2: Vite+ toolchain
 
 **Files:**
+
 - Create: `vite.config.ts` (root, replaces nothing — new file)
 - Create: `tsdown.config.ts`
 
@@ -319,6 +319,7 @@ git commit -m "chore: add vite-plus toolchain and tsdown config"
 ## Task 3: `packages/core` scaffold + types
 
 **Files:**
+
 - Create: `packages/core/package.json`
 - Create: `packages/core/tsconfig.json`
 - Create: `packages/core/vitest.config.ts`
@@ -430,7 +431,12 @@ export type SupportedExtension = (typeof SUPPORTED_EXTENSIONS)[number]
 - [ ] **Step 5: Create `packages/core/src/index.ts`**
 
 ```ts
-export type { ContentEntry, ContentSource, FolioOptions, ListOptions } from './types.js'
+export type {
+  ContentEntry,
+  ContentSource,
+  FolioOptions,
+  ListOptions,
+} from './types.js'
 export { folio } from './plugin.js'
 ```
 
@@ -452,6 +458,7 @@ git commit -m "chore: scaffold packages/core with types"
 ## Task 4: Test fixtures
 
 **Files:**
+
 - Create: `packages/core/tests/fixtures/content/en/blog/my-post.mdx`
 - Create: `packages/core/tests/fixtures/content/en/blog/draft-post.mdx`
 - Create: `packages/core/tests/fixtures/content/en/index.mdx`
@@ -534,6 +541,7 @@ git commit -m "test: add MDX fixtures for core package tests"
 ## Task 5: FileSystemSource
 
 **Files:**
+
 - Create: `packages/core/tests/unit/filesystem-source.test.ts`
 - Create: `packages/core/src/sources/filesystem.ts`
 
@@ -661,6 +669,7 @@ git commit -m "feat(core): add FileSystemSource"
 ## Task 6: Scanner (path resolution)
 
 **Files:**
+
 - Create: `packages/core/tests/unit/scanner.test.ts`
 - Create: `packages/core/src/scanner.ts`
 
@@ -729,7 +738,9 @@ describe('when she builds the content index from a directory', () => {
   it('each entry has a path, locale, and frontmatter', async () => {
     const source = new FileSystemSource(FIXTURES)
     const index = await buildIndex(source, { locales: ['en', 'da'] })
-    const post = index.find((e) => e.path === '/blog/my-post' && e.locale === 'en')
+    const post = index.find(
+      (e) => e.path === '/blog/my-post' && e.locale === 'en',
+    )
     expect(post).toBeDefined()
     expect(post?.frontmatter.title).toBe('My Post')
   })
@@ -779,7 +790,8 @@ export function resolveContentPath(
   }
 
   const withoutIndex = parts.at(-1) === 'index' ? parts.slice(0, -1) : parts
-  const contentPath = withoutIndex.length === 0 ? '/' : '/' + withoutIndex.join('/')
+  const contentPath =
+    withoutIndex.length === 0 ? '/' : '/' + withoutIndex.join('/')
 
   return { contentPath, locale }
 }
@@ -796,7 +808,9 @@ export async function buildIndex(
       const raw = await source.readFile(file.filePath)
       const { data: frontmatter } = matter(raw)
       const frontmatterPath =
-        typeof frontmatter['path'] === 'string' ? frontmatter['path'] : undefined
+        typeof frontmatter['path'] === 'string'
+          ? frontmatter['path']
+          : undefined
       const { contentPath, locale } = resolveContentPath(
         file.relativePath,
         locales,
@@ -834,6 +848,7 @@ git commit -m "feat(core): add scanner with path resolution and frontmatter pars
 ## Task 7: Transformer
 
 **Files:**
+
 - Create: `packages/core/tests/unit/transformer.test.ts`
 - Create: `packages/core/src/transformer.ts`
 
@@ -941,6 +956,7 @@ git commit -m "feat(core): add MDX transformer via @mdx-js/mdx"
 ## Task 8: Vite plugin (transform hook)
 
 **Files:**
+
 - Create: `packages/core/tests/integration/plugin.test.ts`
 - Create: `packages/core/src/plugin.ts`
 
@@ -963,7 +979,10 @@ describe('when she installs folio in her Vite project', () => {
   beforeAll(async () => {
     server = await createServer({
       root: FIXTURES,
-      plugins: [vue(), folio({ contentDir: 'content', jsxImportSource: 'vue' })],
+      plugins: [
+        vue(),
+        folio({ contentDir: 'content', jsxImportSource: 'vue' }),
+      ],
       logLevel: 'silent',
       server: { port: 5999 },
     })
@@ -1031,7 +1050,12 @@ export function folio(userOptions: FolioOptions = {}): Plugin {
 The `src/index.ts` already imports from `./plugin.js` — make sure it's correct:
 
 ```ts
-export type { ContentEntry, ContentSource, FolioOptions, ListOptions } from './types.js'
+export type {
+  ContentEntry,
+  ContentSource,
+  FolioOptions,
+  ListOptions,
+} from './types.js'
 export { folio } from './plugin.js'
 ```
 
@@ -1055,6 +1079,7 @@ git commit -m "feat(core): add Vite plugin with Rolldown filter-based transform 
 ## ★ Task 9: First Green — render `.md` to the page
 
 **Files:**
+
 - Create: `apps/docs/content/index.md`
 - Modify: `apps/docs/vite.config.ts`
 - Modify: `apps/docs/src/App.vue`
@@ -1093,10 +1118,7 @@ import vue from '@vitejs/plugin-vue'
 import { folio } from 'folio'
 
 export default defineConfig({
-  plugins: [
-    vue(),
-    folio({ jsxImportSource: 'vue' }),
-  ],
+  plugins: [vue(), folio({ jsxImportSource: 'vue' })],
 })
 ```
 
@@ -1151,6 +1173,7 @@ git commit -m "feat(docs): render first .md file via folio plugin — milestone 
 ## Task 10: Virtual index module
 
 **Files:**
+
 - Create: `packages/core/src/virtual.ts`
 - Modify: `packages/core/src/plugin.ts`
 - Modify: `packages/core/tests/integration/plugin.test.ts`
@@ -1283,6 +1306,7 @@ git commit -m "feat(core): add virtual:folio/index module"
 ## Task 11: Query API — `listContent` + `getContent`
 
 **Files:**
+
 - Create: `packages/core/src/query.ts`
 - Create: `packages/core/tests/unit/query.test.ts`
 - Modify: `packages/core/src/virtual.ts`
@@ -1376,7 +1400,9 @@ Expected: FAIL — `Cannot find module '../../src/query.js'`
 import type { IndexEntry } from './scanner.js'
 import type { ContentEntry, ListOptions } from './types.js'
 
-function toContentEntry(entry: IndexEntry): Omit<ContentEntry, 'body'> & { filePath: string } {
+function toContentEntry(
+  entry: IndexEntry,
+): Omit<ContentEntry, 'body'> & { filePath: string } {
   return {
     path: entry.path,
     locale: entry.locale,
@@ -1430,12 +1456,14 @@ export function buildQueryModule(entries: IndexEntry[]): string {
   return `
 import { createQueryAPI } from 'folio/internal/query'
 
-const _index = ${JSON.stringify(entries.map((e) => ({
-    path: e.path,
-    locale: e.locale,
-    frontmatter: e.frontmatter,
-    filePath: e.filePath,
-  })))}
+const _index = ${JSON.stringify(
+    entries.map((e) => ({
+      path: e.path,
+      locale: e.locale,
+      frontmatter: e.frontmatter,
+      filePath: e.filePath,
+    })),
+  )}
 
 const { listContent, getContent } = createQueryAPI(_index)
 export { listContent, getContent }
@@ -1446,7 +1474,12 @@ export { listContent, getContent }
 - [ ] **Step 6: Update `packages/core/src/index.ts` to export query functions**
 
 ```ts
-export type { ContentEntry, ContentSource, FolioOptions, ListOptions } from './types.js'
+export type {
+  ContentEntry,
+  ContentSource,
+  FolioOptions,
+  ListOptions,
+} from './types.js'
 export { folio } from './plugin.js'
 export { createQueryAPI } from './query.js'
 ```
@@ -1463,6 +1496,7 @@ git commit -m "feat(core): add listContent and getContent query API"
 ## Task 12: `packages/vue` scaffold + composables
 
 **Files:**
+
 - Create: `packages/vue/package.json`
 - Create: `packages/vue/tsconfig.json`
 - Create: `packages/vue/vitest.config.ts`
@@ -1545,13 +1579,17 @@ const mockEntries: ContentEntry[] = [
     path: '/blog/my-post',
     locale: 'en',
     frontmatter: { title: 'My Post', date: '2024-01-15' },
-    body: async () => ({ default: defineComponent({ template: '<p>body</p>' }) }),
+    body: async () => ({
+      default: defineComponent({ template: '<p>body</p>' }),
+    }),
   },
   {
     path: '/blog/another',
     locale: 'en',
     frontmatter: { title: 'Another Post' },
-    body: async () => ({ default: defineComponent({ template: '<p>body</p>' }) }),
+    body: async () => ({
+      default: defineComponent({ template: '<p>body</p>' }),
+    }),
   },
 ]
 
@@ -1685,6 +1723,7 @@ git commit -m "feat(vue): scaffold @folio/vue with useContent and useContentList
 ## Task 13: `<FolioContent>` component
 
 **Files:**
+
 - Create: `packages/vue/tests/integration/render.test.ts`
 - Create: `packages/vue/src/FolioContent.vue`
 
@@ -1743,7 +1782,9 @@ describe('when she renders <FolioContent> with an entry', () => {
   })
 
   it('she can pass custom components into the MDX body', async () => {
-    const CustomButton = defineComponent({ template: '<button>custom</button>' })
+    const CustomButton = defineComponent({
+      template: '<button>custom</button>',
+    })
     const wrapper = mount(FolioContent, {
       props: { entry: mockEntry, components: { CustomButton } },
     })
@@ -1794,7 +1835,11 @@ onMounted(async () => {
 <template>
   <slot v-if="error" name="error" :error="error" />
   <slot v-else-if="loading" name="loading" />
-  <component :is="BodyComponent" v-else-if="BodyComponent" v-bind="{ components }" />
+  <component
+    :is="BodyComponent"
+    v-else-if="BodyComponent"
+    v-bind="{ components }"
+  />
 </template>
 ```
 
@@ -1818,6 +1863,7 @@ git commit -m "feat(vue): add <FolioContent> component with loading/error slots"
 ## Task 14: Docs site uses `@folio/vue`
 
 **Files:**
+
 - Modify: `apps/docs/package.json`
 - Modify: `apps/docs/vite.config.ts`
 - Modify: `apps/docs/src/App.vue`
@@ -1851,7 +1897,7 @@ Update `apps/docs/package.json` dependencies:
 
 - [ ] **Step 2: Create `apps/docs/content/docs/getting-started.mdx`**
 
-```mdx
+````mdx
 ---
 title: Getting Started
 ---
@@ -1863,6 +1909,7 @@ Install folio in your Vite project:
 ```bash
 pnpm add folio
 ```
+````
 
 Add the plugin to your `vite.config.ts`:
 
@@ -1875,7 +1922,8 @@ export default defineConfig({
 ```
 
 Create a `content/` directory and add your first `.mdx` file.
-```
+
+````
 
 - [ ] **Step 3: Update `apps/docs/src/App.vue` to use composables + FolioContent**
 
@@ -1909,7 +1957,7 @@ const { entries } = useContentList('/')
     </main>
   </div>
 </template>
-```
+````
 
 - [ ] **Step 4: Install and start dev server**
 
@@ -1934,6 +1982,7 @@ git commit -m "feat(docs): wire up @folio/vue composables and <FolioContent> in 
 ## Task 15: SSG integration
 
 **Files:**
+
 - Create: `packages/core/src/ssg.ts`
 - Modify: `packages/core/src/plugin.ts`
 - Modify: `packages/core/src/virtual.ts`
@@ -2109,7 +2158,7 @@ Expected: all tests green, dev server running at http://localhost:5173
 
 - [ ] **Step 2: Create `.claude/skills/test.md`**
 
-```markdown
+````markdown
 ---
 name: test
 description: Run tests for a specific folio package or all packages
@@ -2120,6 +2169,7 @@ To run all tests across all packages:
 ```bash
 pnpm test
 ```
+````
 
 To run tests for a specific package:
 
@@ -2136,7 +2186,8 @@ pnpm test --filter folio -- plugin
 ```
 
 All tests follow BDD style using "she" as the persona. Fixture MDX files live in `packages/core/tests/fixtures/content/`.
-```
+
+````
 
 - [ ] **Step 3: Create `.claude/skills/dev.md`**
 
@@ -2150,12 +2201,13 @@ Start the docs development server:
 
 ```bash
 pnpm dev
-```
+````
 
 This starts `apps/docs` at `http://localhost:5173`. The docs app dogfoods `folio` and `@folio/vue` from the workspace — any change to `packages/core` or `packages/vue` is immediately reflected.
 
 Open `http://localhost:5173` in the browser to follow along visually.
-```
+
+````
 
 - [ ] **Step 4: Create `.claude/skills/new-adapter.md`**
 
@@ -2179,11 +2231,11 @@ To add a new framework adapter (e.g. `@folio/react`):
 6. Add the new package to `apps/docs/package.json` dependencies if needed
 
 The core query API (`listContent`, `getContent`) is framework-agnostic — adapters only wrap it with reactive state management.
-```
+````
 
 - [ ] **Step 5: Create `.claude/skills/new-content.md`**
 
-```markdown
+````markdown
 ---
 name: new-content
 description: Scaffold a new MDX content file for the folio docs
@@ -2201,6 +2253,7 @@ date: 2026-06-05
 
 Content goes here.
 ```
+````
 
 Path conventions:
 
@@ -2209,7 +2262,8 @@ Path conventions:
 - Frontmatter `path: /custom` overrides the filesystem path
 
 The `title` field appears in the navigation built by `useContentList('/')`.
-```
+
+````
 
 - [ ] **Step 6: Create `.claude/skills/add-fixture.md`**
 
@@ -2239,17 +2293,18 @@ draft: false
 # Fixture Title
 
 Fixture content for testing.
-```
+````
 
 After adding a fixture, update the scanner test that asserts `index.length === 4` to the new count.
-```
+
+````
 
 - [ ] **Step 7: Commit**
 
 ```bash
 git add .claude/
 git commit -m "chore: add project skills for contributors"
-```
+````
 
 ---
 

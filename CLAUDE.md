@@ -36,14 +36,14 @@ apps/
 
 Project-based skills live in `.claude/skills/` and are committed to the repo. Any contributor using Claude Code gets these automatically.
 
-| Skill | Purpose |
-| --- | --- |
-| `setup` | First-time contributor setup — pnpm install, vp config, verify dev server |
-| `test` | Run tests for a specific package or all packages with the right Vitest config |
-| `dev` | Start the docs dev server and open the browser |
+| Skill         | Purpose                                                                       |
+| ------------- | ----------------------------------------------------------------------------- |
+| `setup`       | First-time contributor setup — pnpm install, vp config, verify dev server     |
+| `test`        | Run tests for a specific package or all packages with the right Vitest config |
+| `dev`         | Start the docs dev server and open the browser                                |
 | `new-adapter` | Scaffold a new `@folio/<framework>` adapter following the established pattern |
-| `new-content` | Scaffold a new MDX content file for the docs with proper frontmatter |
-| `add-fixture` | Add a test fixture MDX file with the correct shape for BDD tests |
+| `new-content` | Scaffold a new MDX content file for the docs with proper frontmatter          |
+| `add-fixture` | Add a test fixture MDX file with the correct shape for BDD tests              |
 
 These skills are the open-source DX layer — consistent, project-aware workflows from day one for every contributor.
 
