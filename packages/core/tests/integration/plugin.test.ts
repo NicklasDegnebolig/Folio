@@ -17,19 +17,24 @@ describe('when she installs folio in her Vite project', () => {
         folio({ contentDir: 'content', jsxImportSource: 'vue' }),
       ],
       logLevel: 'silent',
-      server: { port: 5999 },
+      server: { port: 5999, hmr: false, ws: false },
+      // Disable watcher so server.close() resolves promptly in tests
+      watch: null,
     })
     await server.listen()
   })
 
-  afterAll(async () => {
-    await server.close()
+  afterAll(() => {
+    // server.close() can hang in test environments due to pending crawl requests;
+    // fire-and-forget is safe here since the tests have already completed.
+    void server.close()
   })
 
   it('her .mdx file compiles to JS with a default export', async () => {
     const result = await server.transformRequest('/content/en/blog/my-post.mdx')
     expect(result?.code).toContain('export default')
-    expect(result?.code).toContain('vue/jsx-runtime')
+    // Vite pre-bundles bare specifiers, so 'vue/jsx-runtime' becomes 'vue_jsx-runtime'
+    expect(result?.code).toMatch(/vue[_/]jsx-runtime/)
   })
 
   it('her .md file also compiles correctly', async () => {
