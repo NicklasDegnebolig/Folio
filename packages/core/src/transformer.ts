@@ -14,7 +14,7 @@ export async function transformContent(
   const compiled = await compile(code, {
     jsxImportSource,
     remarkPlugins: [remarkFrontmatter],
-    providerImportSource: false,
+    providerImportSource: null,
   })
 
   return {
