@@ -24,6 +24,15 @@ describe('when she writes MDX with a component', () => {
   })
 })
 
+describe('when she uses a different jsx runtime', () => {
+  it('the output imports from the configured runtime, not vue', async () => {
+    const code = '# Hello'
+    const result = await transformContent(code, 'test.md', 'react')
+    expect(result.code).toContain('react/jsx-runtime')
+    expect(result.code).not.toContain('vue/jsx-runtime')
+  })
+})
+
 describe('when her file has frontmatter', () => {
   it('the frontmatter is stripped from the rendered body', async () => {
     const code = '---\ntitle: My Post\n---\n\n# Body only'
