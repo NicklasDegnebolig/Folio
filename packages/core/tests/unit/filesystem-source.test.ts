@@ -23,7 +23,7 @@ describe('when she provides a content directory', () => {
 
   it('each file has an absolute filePath and a relativePath', async () => {
     const files = await source.listFiles()
-    const file = files[0]
+    const file = files[0]!
     expect(file.filePath).toMatch(/^\//)
     expect(file.relativePath).not.toMatch(/^\//)
   })
