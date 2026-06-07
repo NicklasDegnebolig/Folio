@@ -37,7 +37,7 @@ describe('when she installs folio in her Vite project', () => {
     expect(result?.code).toMatch(/vue[_/]jsx-runtime/)
   })
 
-  it('her .md file also compiles correctly', async () => {
+  it('her index.mdx file also compiles correctly', async () => {
     const result = await server.transformRequest('/content/en/index.mdx')
     expect(result?.code).toContain('export default')
   })
