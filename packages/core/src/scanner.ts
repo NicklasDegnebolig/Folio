@@ -33,7 +33,7 @@ export function resolveContentPath(
   const contentPath =
     withoutIndex.length === 0 ? '/' : '/' + withoutIndex.join('/')
 
-  return { contentPath, locale }
+  return { contentPath, ...(locale !== undefined && { locale }) }
 }
 
 export async function buildIndex(
