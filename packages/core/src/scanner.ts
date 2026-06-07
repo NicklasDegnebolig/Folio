@@ -37,8 +37,32 @@ export function resolveContentPath(
 }
 
 export async function buildIndex(
-  _source: ContentSource,
-  _options: Pick<FolioOptions, 'locales'>,
+  source: ContentSource,
+  options: Pick<FolioOptions, 'locales'>,
 ): Promise<IndexEntry[]> {
-  return []
+  const files = await source.listFiles()
+  const locales = options.locales ?? []
+
+  return Promise.all(
+    files.map(async (file: ContentFile) => {
+      const raw = await source.readFile(file.filePath)
+      const { data: frontmatter } = matter(raw)
+      const frontmatterPath =
+        typeof frontmatter['path'] === 'string'
+          ? frontmatter['path']
+          : undefined
+      const { contentPath, locale } = resolveContentPath(
+        file.relativePath,
+        locales,
+        frontmatterPath,
+      )
+
+      return {
+        path: contentPath,
+        ...(locale !== undefined && { locale }),
+        frontmatter: frontmatter as Record<string, unknown>,
+        filePath: file.filePath,
+      }
+    }),
+  )
 }
