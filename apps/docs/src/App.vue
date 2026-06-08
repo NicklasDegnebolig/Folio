@@ -1,7 +1,9 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
+<script setup lang="ts">
+import Content from '../content/index.md'
 </script>
 
 <template>
-  <HelloWorld />
+  <main>
+    <Content />
+  </main>
 </template>

@@ -1170,6 +1170,89 @@ git commit -m "feat(docs): render first .md file via folio plugin — milestone 
 
 ---
 
+## Task 9b: DX — Node 24, monorepo scripts, developer tooling
+
+**Goal:** Upgrade to Node 24, add comprehensive predefined scripts to every `package.json` so no one ever needs to type long `pnpm --filter folio exec vitest run` commands again. All common operations get a short alias.
+
+**Files:**
+- Modify: `package.json` (root)
+- Modify: `packages/core/package.json`
+- Update `.nvmrc` / nvm default to Node 24
+
+---
+
+- [ ] **Step 1: Upgrade to Node 24**
+
+```bash
+nvm install 24
+nvm alias default 24
+node --version  # should print v24.x.x
+```
+
+Update `engines.node` in root `package.json`:
+```json
+"engines": { "node": ">=24.0.0", "pnpm": ">=8" }
+```
+
+Commit: `chore: upgrade to Node 24`
+
+---
+
+- [ ] **Step 2: Add scripts to root `package.json`**
+
+Replace the `scripts` block with:
+```json
+"scripts": {
+  "dev": "pnpm --filter @folio/docs dev",
+  "build": "tsdown",
+  "build:packages": "tsdown",
+  "test": "vitest",
+  "test:core": "pnpm --filter folio test",
+  "test:vue": "pnpm --filter @folio/vue test",
+  "test:watch": "vitest --watch",
+  "typecheck": "pnpm -r typecheck",
+  "typecheck:core": "tsc --project packages/core/tsconfig.json --noEmit",
+  "lint": "vp lint",
+  "fmt": "vp fmt",
+  "fmt:check": "vp fmt --check",
+  "clean": "pnpm -r --parallel exec rm -rf dist",
+  "prepare": "vp config"
+}
+```
+
+Commit: `chore: add comprehensive monorepo scripts`
+
+---
+
+- [ ] **Step 3: Add per-package scripts to `packages/core/package.json`**
+
+Add a `scripts` block:
+```json
+"scripts": {
+  "test": "vitest run",
+  "test:watch": "vitest --watch",
+  "typecheck": "tsc --noEmit",
+  "build": "tsdown"
+}
+```
+
+Commit: `chore(core): add package-level scripts`
+
+---
+
+- [ ] **Step 4: Verify everything works**
+
+```bash
+pnpm test:core        # runs packages/core tests
+pnpm typecheck:core   # runs tsc on packages/core
+pnpm fmt:check        # checks formatting
+pnpm lint             # runs linter
+```
+
+Commit: if any fixes needed
+
+---
+
 ## Task 10: Virtual index module
 
 **Files:**
