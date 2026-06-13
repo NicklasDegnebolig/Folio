@@ -1175,6 +1175,7 @@ git commit -m "feat(docs): render first .md file via folio plugin — milestone 
 **Goal:** Upgrade to Node 24, add comprehensive predefined scripts to every `package.json` so no one ever needs to type long `pnpm --filter folio exec vitest run` commands again. All common operations get a short alias.
 
 **Files:**
+
 - Modify: `package.json` (root)
 - Modify: `packages/core/package.json`
 - Update `.nvmrc` / nvm default to Node 24
@@ -1190,6 +1191,7 @@ node --version  # should print v24.x.x
 ```
 
 Update `engines.node` in root `package.json`:
+
 ```json
 "engines": { "node": ">=24.0.0", "pnpm": ">=8" }
 ```
@@ -1201,6 +1203,7 @@ Commit: `chore: upgrade to Node 24`
 - [ ] **Step 2: Add scripts to root `package.json`**
 
 Replace the `scripts` block with:
+
 ```json
 "scripts": {
   "dev": "pnpm --filter @folio/docs dev",
@@ -1227,6 +1230,7 @@ Commit: `chore: add comprehensive monorepo scripts`
 - [ ] **Step 3: Add per-package scripts to `packages/core/package.json`**
 
 Add a `scripts` block:
+
 ```json
 "scripts": {
   "test": "vitest run",

@@ -5,9 +5,16 @@
   "scripts": {
     "dev": "pnpm --filter @folio/docs dev",
     "build:packages": "tsdown",
-    "test": "vitest",
-    "lint": "vp lint",
+    "test": "vitest run",
+    "test:core": "vitest run --project packages/core",
+    "test:vue": "vitest run --project packages/vue",
+    "test:watch": "vitest",
+    "typecheck": "tsc --build --noEmit",
+    "typecheck:core": "tsc --project packages/core/tsconfig.json --noEmit",
     "fmt": "vp fmt",
+    "fmt:check": "vp fmt --check",
+    "lint": "vp lint",
+    "clean": "find packages apps -type d -name dist -not -path '*/node_modules/*' -exec rm -rf {} +",
     "prepare": "vp config"
   },
   "devDependencies": {
@@ -17,7 +24,7 @@
     "vitest": "^4.1.8"
   },
   "engines": {
-    "node": ">=22.12.0",
+    "node": ">=24.0.0",
     "pnpm": ">=8"
   },
   "packageManager": "pnpm@8.15.5"
