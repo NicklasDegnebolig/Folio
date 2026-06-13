@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useContentList, FolioContent } from '@folio/vue'
 import type { ContentEntry } from 'folio'
+import Button from './components/Button.vue'
 
 const { entries, loading } = useContentList('/docs')
 const active = ref<ContentEntry | null>(null)
@@ -30,7 +31,7 @@ const active = ref<ContentEntry | null>(null)
 
     <main style="flex: 1">
       <p v-if="!active" style="color: #888">← Select a page</p>
-      <FolioContent v-else :entry="active">
+      <FolioContent v-else :entry="active" :components="{ Button }">
         <template #loading>Loading content…</template>
       </FolioContent>
     </main>

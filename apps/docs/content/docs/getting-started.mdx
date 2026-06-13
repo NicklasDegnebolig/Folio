@@ -70,3 +70,32 @@ import GettingStarted from '../content/docs/getting-started.mdx'
 ```
 
 Both approaches work with any supported framework — swap `jsxImportSource: 'react'` or `'solid-js'` and everything continues to work.
+
+## Custom components in MDX
+
+Pass a `components` map to `<FolioContent>` and use those components directly in your `.mdx` files:
+
+```vue
+<FolioContent :entry="entry" :components="{ Button }" />
+```
+
+Then inside any `.mdx` file:
+
+```mdx
+<Button variant="primary" href="/docs">
+  Read the docs
+</Button>
+<Button variant="secondary">Learn more</Button>
+```
+
+Here's a live example — these buttons are rendered by the Vue `Button` component provided at the call site:
+
+<Button variant="primary" href="#">
+  Get started
+</Button>
+<Button variant="secondary" size="md">
+  Learn more
+</Button>
+<Button variant="ghost" size="sm">
+  View source
+</Button>
