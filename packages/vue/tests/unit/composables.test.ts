@@ -5,32 +5,33 @@ import { flushPromises, mount } from '@vue/test-utils'
 import type { ContentEntry } from 'folio'
 import { useContent, useContentList } from '../../src/composables.js'
 
-const mockEntries: ContentEntry[] = [
-  {
+vi.mock('virtual:folio/query', () => ({
+  listContent: vi.fn<() => Promise<ContentEntry[]>>().mockResolvedValue([
+    {
+      path: '/blog/my-post',
+      locale: 'en',
+      frontmatter: { title: 'My Post', date: '2024-01-15' },
+      body: async () => ({
+        default: defineComponent({ template: '<p>body</p>' }),
+      }),
+    },
+    {
+      path: '/blog/another',
+      locale: 'en',
+      frontmatter: { title: 'Another Post' },
+      body: async () => ({
+        default: defineComponent({ template: '<p>body</p>' }),
+      }),
+    },
+  ]),
+  getContent: vi.fn<() => Promise<ContentEntry>>().mockResolvedValue({
     path: '/blog/my-post',
     locale: 'en',
     frontmatter: { title: 'My Post', date: '2024-01-15' },
     body: async () => ({
       default: defineComponent({ template: '<p>body</p>' }),
     }),
-  },
-  {
-    path: '/blog/another',
-    locale: 'en',
-    frontmatter: { title: 'Another Post' },
-    body: async () => ({
-      default: defineComponent({ template: '<p>body</p>' }),
-    }),
-  },
-]
-
-vi.mock('virtual:folio/query', () => ({
-  listContent: vi
-    .fn<() => Promise<ContentEntry[]>>()
-    .mockResolvedValue(mockEntries),
-  getContent: vi
-    .fn<() => Promise<ContentEntry>>()
-    .mockResolvedValue(mockEntries[0]!),
+  }),
 }))
 
 describe('when she uses useContentList in a component', () => {

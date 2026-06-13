@@ -14,18 +14,36 @@ export function buildIndexModule(entries: IndexEntry[]): string {
 export function buildQueryModule(entries: IndexEntry[]): string {
   const serialised = entries.map((e) => ({
     path: e.path,
-    locale: e.locale,
+    locale: e.locale !== undefined ? e.locale : undefined,
     frontmatter: e.frontmatter,
     filePath: e.filePath,
   }))
 
   return `
-import { createQueryAPI } from 'folio/internal/query'
-
 const _index = ${JSON.stringify(serialised)}
 
-const { listContent, getContent } = createQueryAPI(_index)
-export { listContent, getContent }
+export async function listContent(prefix, options) {
+  let results = _index.filter(e => e.path.startsWith(prefix))
+  if (options?.locale) results = results.filter(e => e.locale === options.locale)
+  return results.map(e => ({
+    path: e.path,
+    ...(e.locale !== undefined && { locale: e.locale }),
+    frontmatter: e.frontmatter,
+    body: () => import(/* @vite-ignore */ e.filePath),
+  }))
+}
+
+export async function getContent(path, options) {
+  let entry = _index.find(e => e.path === path)
+  if (options?.locale) entry = _index.find(e => e.path === path && e.locale === options.locale)
+  if (!entry) return undefined
+  return {
+    path: entry.path,
+    ...(entry.locale !== undefined && { locale: entry.locale }),
+    frontmatter: entry.frontmatter,
+    body: () => import(/* @vite-ignore */ entry.filePath),
+  }
+}
 `
 }
 

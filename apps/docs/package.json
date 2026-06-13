@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@folio/vue": "workspace:*",
     "folio": "workspace:*",
     "vue": "^3.5.0"
   },

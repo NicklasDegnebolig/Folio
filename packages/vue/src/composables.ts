@@ -1,5 +1,6 @@
 import { onMounted, ref } from 'vue'
 import type { ContentEntry, ListOptions } from 'folio'
+import { listContent, getContent } from 'virtual:folio/query'
 
 export function useContentList(prefix: string, options?: ListOptions) {
   const entries = ref<ContentEntry[]>([])
@@ -8,9 +9,6 @@ export function useContentList(prefix: string, options?: ListOptions) {
 
   onMounted(async () => {
     try {
-      const { listContent } = await import(
-        /* @vite-ignore */ 'virtual:folio/query'
-      )
       entries.value = await listContent(prefix, options)
     } catch (e) {
       error.value = e as Error
@@ -29,9 +27,6 @@ export function useContent(path: string, options?: ListOptions) {
 
   onMounted(async () => {
     try {
-      const { getContent } = await import(
-        /* @vite-ignore */ 'virtual:folio/query'
-      )
       entry.value = (await getContent(path, options)) ?? null
     } catch (e) {
       error.value = e as Error

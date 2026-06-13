@@ -1,0 +1,72 @@
+---
+title: Getting Started
+description: Add folio to your Vite project in minutes
+---
+
+# Getting Started
+
+Install folio and your framework adapter:
+
+```sh
+pnpm add folio @folio/vue
+```
+
+## Configure the plugin
+
+Add the Vite plugin in `vite.config.ts`:
+
+```ts
+import { folio } from 'folio'
+
+export default {
+  plugins: [folio({ jsxImportSource: 'vue' })],
+}
+```
+
+## Use the composables
+
+List all content under a prefix with `useContentList`:
+
+```vue
+<script setup>
+import { useContentList } from '@folio/vue'
+const { entries, loading } = useContentList('/docs')
+</script>
+
+<template>
+  <ul>
+    <li v-for="entry in entries" :key="entry.path">
+      {{ entry.frontmatter.title }}
+    </li>
+  </ul>
+</template>
+```
+
+Render a single entry with `useContent` and `<FolioContent>`:
+
+```vue
+<script setup>
+import { useContent, FolioContent } from '@folio/vue'
+const { entry } = useContent('/docs/getting-started')
+</script>
+
+<template>
+  <FolioContent :entry="entry" />
+</template>
+```
+
+## Import directly as a component
+
+You can also import `.md` and `.mdx` files directly — no API needed:
+
+```vue
+<script setup>
+import GettingStarted from '../content/docs/getting-started.mdx'
+</script>
+
+<template>
+  <GettingStarted />
+</template>
+```
+
+Both approaches work with any supported framework — swap `jsxImportSource: 'react'` or `'solid-js'` and everything continues to work.

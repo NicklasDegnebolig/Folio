@@ -4,4 +4,7 @@ import { folio } from 'folio'
 
 export default defineConfig({
   plugins: [vue(), folio({ jsxImportSource: 'vue' })],
+  resolve: {
+    conditions: ['source'],
+  },
 })

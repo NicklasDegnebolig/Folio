@@ -37,13 +37,10 @@ export function folio(userOptions: FolioOptions = {}): Plugin {
       },
     },
 
-    resolveId: {
-      filter: { id: /^virtual:folio\// },
-      handler(id) {
-        if (id === INDEX_ID) return RESOLVED_INDEX_ID
-        if (id === QUERY_ID) return RESOLVED_QUERY_ID
-        if (id === ROUTES_ID) return RESOLVED_ROUTES_ID
-      },
+    resolveId(id) {
+      if (id === INDEX_ID) return RESOLVED_INDEX_ID
+      if (id === QUERY_ID) return RESOLVED_QUERY_ID
+      if (id === ROUTES_ID) return RESOLVED_ROUTES_ID
     },
 
     load: {
