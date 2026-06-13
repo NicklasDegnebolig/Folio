@@ -65,10 +65,12 @@ TypeScript is configured with `strict: true`, `exactOptionalPropertyTypes: true`
 
 ### Code quality
 
+Powered by **vite+** — oxlint for linting, oxfmt for formatting. No ESLint, no Prettier.
+
 | Script           | What it does                                         |
 | ---------------- | ---------------------------------------------------- |
-| `pnpm lint`      | Lint all files                                       |
-| `pnpm fmt`       | Format all files (auto-fix)                          |
+| `pnpm lint`      | Lint all files with oxlint                           |
+| `pnpm fmt`       | Format all files with oxfmt (auto-fix)               |
 | `pnpm fmt:check` | Check formatting without changing files (used in CI) |
 
 ### Housekeeping
@@ -90,29 +92,26 @@ pnpm typecheck    # tsc --noEmit
 
 ## How vite+ works
 
-[vite-plus](https://vite-plus.dev) (`vp`) is the DX toolchain for this project. It wraps Prettier, ESLint, and lint-staged into a single coherent setup.
+[vite-plus](https://vite-plus.dev) (`vp`) is the unified DX toolchain for this project. It bundles **oxlint** for linting and **oxfmt** for formatting — both Rust-based, no Prettier or ESLint.
 
 ### Commands
 
 ```sh
-vp lint          # run ESLint across the project
-vp fmt           # format with Prettier (auto-fix)
-vp fmt --check   # check formatting without fixing (exits 1 if issues found)
-vp config        # write the lint-staged + pre-commit hook config (run automatically on pnpm install via "prepare")
+vp lint          # lint all files with oxlint
+vp fmt           # format all files with oxfmt (auto-fix)
+vp fmt --check   # check formatting without changing files (exits 1 if issues found, used in CI)
+vp config        # write the pre-commit hook config (run automatically on pnpm install via "prepare")
 ```
 
 ### Pre-commit hook
 
-When you `git commit`, lint-staged runs automatically on staged files:
+When you `git commit`, `vp staged` runs automatically on staged files — it lints and formats them with oxlint + oxfmt, then re-stages any changes.
 
-1. **`vp check --fix`** — lints and formats staged `.js`, `.ts`, `.vue`, `.mdx` files
-2. If any file changes after the fix, the changes are re-staged
-
-This means you never commit unformatted or unlinted code. If the hook fails, fix the issue and commit again — do **not** skip it with `--no-verify`.
+You never commit unformatted or unlinted code. If the hook fails, fix the issue and commit again — do **not** skip it with `--no-verify`.
 
 ### Config
 
-vite-plus reads config from the root. Running `pnpm prepare` (or `vp config`) regenerates it. You don't normally need to touch this directly.
+Running `pnpm prepare` (or `vp config`) regenerates the pre-commit hook under `.vite-hooks/`. You don't normally need to touch this directly.
 
 ---
 

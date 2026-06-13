@@ -1,0 +1,40 @@
+{
+  // Use oxfmt (via vite+) as the default formatter — no Prettier
+  "editor.defaultFormatter": "VoidZero.vite-plus-extension-pack",
+  "editor.formatOnSave": true,
+
+  // Per-language formatter overrides
+  "[vue]": {
+    "editor.defaultFormatter": "VoidZero.vite-plus-extension-pack"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "VoidZero.vite-plus-extension-pack"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "VoidZero.vite-plus-extension-pack"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "VoidZero.vite-plus-extension-pack"
+  },
+  "[mdx]": {
+    "editor.defaultFormatter": "VoidZero.vite-plus-extension-pack"
+  },
+
+  // Disable built-in JS/TS validation in favour of oxlint
+  "javascript.validate.enable": false,
+
+  // Volar — use workspace TypeScript version
+  "vue.server.hybridMode": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  // File associations
+  "files.associations": {
+    "*.mdx": "mdx"
+  },
+
+  // Hide generated build artifacts from the file explorer
+  "files.exclude": {
+    "**/dist": true,
+    "**/.vite-hooks": true
+  }
+}
