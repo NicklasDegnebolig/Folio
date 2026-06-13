@@ -1,5 +1,5 @@
 {
-  // Use oxfmt (via vite+) as the default formatter — no Prettier
+  // Formatter: oxfmt via vite+ — no Prettier
   "editor.defaultFormatter": "VoidZero.vite-plus-extension-pack",
   "editor.formatOnSave": true,
 
@@ -20,7 +20,10 @@
     "editor.defaultFormatter": "VoidZero.vite-plus-extension-pack"
   },
 
-  // Disable built-in JS/TS validation in favour of oxlint
+  // Disable ESLint if installed — oxlint handles linting
+  "eslint.enable": false,
+
+  // Disable built-in JS/TS validation — oxlint handles it
   "javascript.validate.enable": false,
 
   // Volar — use workspace TypeScript version

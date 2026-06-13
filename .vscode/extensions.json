@@ -2,5 +2,9 @@
   "recommendations": [
     "Vue.volar",
     "VoidZero.vite-plus-extension-pack"
+  ],
+  "unwantedRecommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode"
   ]
 }
