@@ -28,7 +28,7 @@ pnpm install     # install all workspace deps
 pnpm dev         # start the docs dev server at http://localhost:5173
 ```
 
-That's it. The docs site imports `.md` and `.mdx` files directly as Vue components — no build step, no codegen, just Vite.
+That's it. The docs site imports `.md` and `.mdx` files directly as components — no build step, no codegen, just Vite. The docs happen to use Vue, but `folio` itself works with any framework.
 
 ---
 
@@ -118,22 +118,24 @@ vite-plus reads config from the root. Running `pnpm prepare` (or `vp config`) re
 
 ## Architecture
 
-### How a `.md` file becomes a Vue component
+### How a `.md` file becomes a component
+
+The `jsxImportSource` option is the only framework coupling. Swap it to target any framework.
 
 ```text
-apps/docs/content/index.md
+content/index.md
         │
         ▼
 [folio Vite plugin]  ← transform hook fires on every .md/.mdx import
         │
         ▼
-[@mdx-js/mdx compile()]  ← MDX → JSX, jsxImportSource: 'vue'
+[@mdx-js/mdx compile()]  ← MDX → JSX (framework-agnostic)
         │
         ▼
-vue/jsx-runtime  ← JSX calls resolve to Vue's h() function
+<jsxImportSource>/jsx-runtime  ← e.g. vue, react, solid-js, preact
         │
         ▼
-Vue component  ← drop-in inside any <template>
+framework component  ← drop into any template, JSX tree, or render function
 ```
 
 ### Key design decisions

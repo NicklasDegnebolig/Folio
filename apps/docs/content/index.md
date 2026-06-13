@@ -55,18 +55,20 @@ You write this:
 This is **markdown**.
 ```
 
-Folio compiles it to a Vue component at request time via `@mdx-js/mdx` — no intermediate files, no watchers, just Vite's transform pipeline.
+Folio compiles it to a component for your framework via `@mdx-js/mdx` — no intermediate files, no watchers, just Vite's transform pipeline. The `jsxImportSource` option wires it to your runtime.
 
 ```ts
-// vite.config.ts
-import { folio } from 'folio'
+// vite.config.ts — Vue
+folio({ jsxImportSource: 'vue' })
 
-export default defineConfig({
-  plugins: [vue(), folio({ jsxImportSource: 'vue' })],
-})
+// vite.config.ts — React
+folio({ jsxImportSource: 'react' })
+
+// vite.config.ts — Solid
+folio({ jsxImportSource: 'solid-js' })
 ```
 
-Then import anywhere in your app:
+Then import anywhere in your app (example in Vue, works the same in any framework):
 
 ```vue
 <script setup>
