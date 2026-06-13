@@ -41,4 +41,15 @@ describe('when she installs folio in her Vite project', () => {
     const result = await server.transformRequest('/content/en/index.mdx')
     expect(result?.code).toContain('export default')
   })
+
+  it('she can import virtual:folio/index to get all content metadata', async () => {
+    const mod = await server.ssrLoadModule('virtual:folio/index')
+    expect(Array.isArray(mod.index)).toBe(true)
+    expect(mod.index.length).toBeGreaterThan(0)
+    expect(mod.index[0]).toMatchObject({
+      path: expect.any(String),
+      frontmatter: expect.any(Object),
+      filePath: expect.any(String),
+    })
+  })
 })
