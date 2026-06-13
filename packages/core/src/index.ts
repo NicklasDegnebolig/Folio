@@ -9,3 +9,4 @@ export type {
 export { SUPPORTED_EXTENSIONS } from './types.js'
 export { folio } from './plugin.js'
 export { createQueryAPI } from './query.js'
+export { generatePages } from './ssg.js'

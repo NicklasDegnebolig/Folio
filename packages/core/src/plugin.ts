@@ -1,10 +1,15 @@
 import { resolve } from 'node:path'
-import type { Plugin } from 'vite'
+import type { Plugin, ResolvedConfig } from 'vite'
 import { buildIndex } from './scanner.js'
+import { generatePages } from './ssg.js'
 import { FileSystemSource } from './sources/filesystem.js'
 import { transformContent } from './transformer.js'
 import type { FolioOptions } from './types.js'
-import { buildIndexModule, buildQueryModule } from './virtual.js'
+import {
+  buildIndexModule,
+  buildQueryModule,
+  buildRoutesModule,
+} from './virtual.js'
 
 const INDEX_ID = 'virtual:folio/index'
 const QUERY_ID = 'virtual:folio/query'
@@ -22,11 +27,13 @@ const defaultOptions = {
 export function folio(userOptions: FolioOptions = {}): Plugin {
   const options = { ...defaultOptions, ...userOptions }
   let contentDir: string
+  let resolvedConfig: ResolvedConfig
 
   return {
     name: 'folio',
 
     configResolved(config) {
+      resolvedConfig = config
       contentDir = resolve(config.root, options.contentDir ?? 'content')
     },
 
@@ -44,13 +51,22 @@ export function folio(userOptions: FolioOptions = {}): Plugin {
     },
 
     load: {
-      filter: { id: /^\0virtual:folio\/(index|query)$/ },
+      filter: { id: /^\0virtual:folio\/(index|query|routes)$/ },
       async handler(id) {
         const source = new FileSystemSource(contentDir)
         const entries = await buildIndex(source, { locales: options.locales })
         if (id === RESOLVED_QUERY_ID) return buildQueryModule(entries)
+        if (id === RESOLVED_ROUTES_ID) return buildRoutesModule(entries)
         return buildIndexModule(entries)
       },
+    },
+
+    async closeBundle() {
+      if (!options.ssg) return
+      const source = new FileSystemSource(contentDir)
+      const entries = await buildIndex(source, { locales: options.locales })
+      const outDir = resolve(resolvedConfig.root, resolvedConfig.build.outDir)
+      await generatePages(entries, outDir, options.ssg)
     },
   }
 }

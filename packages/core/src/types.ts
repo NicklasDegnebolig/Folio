@@ -1,4 +1,5 @@
 import type { Component } from 'vue'
+import type { IndexEntry } from './scanner.js'
 
 export interface ContentFile {
   filePath: string
@@ -25,7 +26,7 @@ export interface ListOptions {
 }
 
 export interface SsgOptions {
-  render: (path: string) => Promise<string>
+  render: (path: string, entry: IndexEntry) => Promise<string>
 }
 
 export interface FolioOptions {

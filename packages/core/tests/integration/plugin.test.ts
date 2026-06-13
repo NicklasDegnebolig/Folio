@@ -52,4 +52,11 @@ describe('when she installs folio in her Vite project', () => {
       filePath: expect.any(String),
     })
   })
+
+  it('she can import virtual:folio/routes to get all content paths', async () => {
+    const mod = await server.ssrLoadModule('virtual:folio/routes')
+    expect(Array.isArray(mod.routes)).toBe(true)
+    expect(mod.routes.length).toBeGreaterThan(0)
+    expect(mod.routes.every((r: unknown) => typeof r === 'string')).toBe(true)
+  })
 })
