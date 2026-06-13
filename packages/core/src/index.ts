@@ -8,3 +8,4 @@ export type {
 } from './types.js'
 export { SUPPORTED_EXTENSIONS } from './types.js'
 export { folio } from './plugin.js'
+export { createQueryAPI } from './query.js'
