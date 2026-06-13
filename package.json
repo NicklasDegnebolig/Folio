@@ -5,10 +5,10 @@
   "scripts": {
     "dev": "pnpm --filter @folio/docs dev",
     "build:packages": "tsdown",
-    "test": "vitest run",
+    "test": "pnpm test:core && pnpm test:vue",
     "test:core": "pnpm --filter folio test",
     "test:vue": "pnpm --filter @folio/vue test",
-    "test:watch": "vitest",
+    "test:watch": "vitest --workspace vitest.workspace.ts",
     "typecheck": "tsc --build --noEmit",
     "typecheck:core": "tsc --project packages/core/tsconfig.json --noEmit",
     "fmt": "vp fmt",
