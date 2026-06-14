@@ -1,212 +1,128 @@
 # folio
 
-A Vite-native MDX content layer — framework-agnostic, works in any Vite project. Think Nuxt Content but without the Nuxt.
-
-The `apps/docs` site is both the documentation and the live proof-of-concept. It dogfoods `folio` itself.
+A Vite-native MDX content layer. Drop `.md` and `.mdx` files into your project and import them as components — no build step, no codegen, just Vite.
 
 ---
 
-## Monorepo structure
+## Packages
 
-```text
-packages/
-  core/       → npm: folio           Vite plugin + plain JS query API
-  vue/        → npm: @folio/vue      Reactive Vue composables
-apps/
-  docs/       → folio docs site      Dogfoods folio, serves as live proof-of-concept
-```
+| Package | npm | Description |
+| --- | --- | --- |
+| [`folio`](packages/core) | `folio` | Vite plugin + query API. Framework-agnostic core. |
+| [`@folio/vue`](packages/vue) | `@folio/vue` | Reactive Vue composables and a `<FolioContent>` component. |
 
----
+### `folio` — core
 
-## Getting started
+The Vite plugin that transforms `.md` and `.mdx` files into components for any framework. It exposes three virtual modules you can import from anywhere in your app:
 
-You only need to do this once per terminal session (or when you open the project for the day):
+- `virtual:folio/index` — the full content index (paths + frontmatter)
+- `virtual:folio/query` — `listContent()` and `getContent()` functions
+- `virtual:folio/routes` — flat path list for SSG
 
-```sh
-nvm use          # picks up .nvmrc → Node 24
-pnpm install     # install all workspace deps
-pnpm dev         # start the docs dev server at http://localhost:5173
-```
-
-That's it. The docs site imports `.md` and `.mdx` files directly as components — no build step, no codegen, just Vite. The docs happen to use Vue, but `folio` itself works with any framework.
-
----
-
-## All scripts
-
-Run everything from the **monorepo root**.
-
-### Development
-
-| Script                | What it does                                         |
-| --------------------- | ---------------------------------------------------- |
-| `pnpm dev`            | Start the docs dev server at `http://localhost:5173` |
-| `pnpm build:packages` | Build all packages to `dist/` (ESM + CJS + `.d.ts`)  |
-
-### Testing
-
-| Script            | What it does                                   |
-| ----------------- | ---------------------------------------------- |
-| `pnpm test`       | Run all tests once across all packages         |
-| `pnpm test:core`  | Run only `packages/core` tests                 |
-| `pnpm test:vue`   | Run only `packages/vue` tests                  |
-| `pnpm test:watch` | Run tests in watch mode (re-runs on file save) |
-
-Tests live in `packages/<name>/tests/`. All tests are BDD-style with Vitest and use real fixture `.mdx` files — no mocked strings.
-
-### Type checking
-
-| Script                | What it does                    |
-| --------------------- | ------------------------------- |
-| `pnpm typecheck`      | Type-check all packages at once |
-| `pnpm typecheck:core` | Type-check `packages/core` only |
-
-TypeScript is configured with `strict: true`, `exactOptionalPropertyTypes: true`, and `noUncheckedIndexedAccess: true`.
-
-### Code quality
-
-Powered by **vite+** — oxlint for linting, oxfmt for formatting. No ESLint, no Prettier.
-
-| Script           | What it does                                         |
-| ---------------- | ---------------------------------------------------- |
-| `pnpm lint`      | Lint all files with oxlint                           |
-| `pnpm fmt`       | Format all files with oxfmt (auto-fix)               |
-| `pnpm fmt:check` | Check formatting without changing files (used in CI) |
-
-### Housekeeping
-
-| Script       | What it does                                       |
-| ------------ | -------------------------------------------------- |
-| `pnpm clean` | Delete all `dist/` directories across the monorepo |
-
-### Per-package scripts (run from inside `packages/core`)
-
-```sh
-pnpm build        # tsdown — outputs dist/index.mjs, dist/index.cjs, dist/index.d.mts
-pnpm test         # vitest run
-pnpm test:watch   # vitest watch
-pnpm typecheck    # tsc --noEmit
-```
-
----
-
-## How vite+ works
-
-[vite-plus](https://vite-plus.dev) (`vp`) is the unified DX toolchain for this project. It bundles **oxlint** for linting and **oxfmt** for formatting — both Rust-based, no Prettier or ESLint.
-
-### Commands
-
-```sh
-vp lint          # lint all files with oxlint
-vp fmt           # format all files with oxfmt (auto-fix)
-vp fmt --check   # check formatting without changing files (exits 1 if issues found, used in CI)
-vp config        # write the pre-commit hook config (run automatically on pnpm install via "prepare")
-```
-
-### Pre-commit hook
-
-When you `git commit`, `vp staged` runs automatically on staged files — it lints and formats them with oxlint + oxfmt, then re-stages any changes.
-
-You never commit unformatted or unlinted code. If the hook fails, fix the issue and commit again — do **not** skip it with `--no-verify`.
-
-### Config
-
-Running `pnpm prepare` (or `vp config`) regenerates the pre-commit hook under `.vite-hooks/`. You don't normally need to touch this directly.
-
----
-
-## Architecture
-
-### How a `.md` file becomes a component
-
-The `jsxImportSource` option is the only framework coupling. Swap it to target any framework.
-
-```text
-content/index.md
-        │
-        ▼
-[folio Vite plugin]  ← transform hook fires on every .md/.mdx import
-        │
-        ▼
-[@mdx-js/mdx compile()]  ← MDX → JSX (framework-agnostic)
-        │
-        ▼
-<jsxImportSource>/jsx-runtime  ← e.g. vue, react, solid-js, preact
-        │
-        ▼
-framework component  ← drop into any template, JSX tree, or render function
-```
-
-### Key design decisions
-
-**Virtual modules** — folio will expose `virtual:folio/index` as a route map so you can list/query content at runtime without knowing file paths upfront.
-
-**ContentSource interface** — all file access goes through this interface, never raw `fs` calls. This is the door for a future CMS layer (remote MDX, no local files needed).
-
-**Filesystem mirrors routes** — `content/blog/hello.md` becomes path `/blog/hello`. Frontmatter `path:` overrides the default. Locale-prefixed directories (`content/en/`, `content/da/`) are supported via the `locales` option.
-
-**jsxImportSource is pluggable** — pass `jsxImportSource: 'react'` or `'solid-js'` and the compiled MDX will import from that runtime instead. No framework lock-in at the plugin level.
-
-### Plugin options
+The only framework coupling is the `jsxImportSource` option — swap it for any JSX runtime.
 
 ```ts
 import { folio } from 'folio'
 
-folio({
-  contentDir: 'content', // where your .md/.mdx files live (default: 'content')
-  jsxImportSource: 'vue', // JSX runtime (default: 'vue')
-  locales: ['en', 'da'], // locale-prefixed directories to recognise
-})
+export default {
+  plugins: [
+    folio({
+      contentDir: 'content',  // where your .md/.mdx files live (default: 'content')
+      jsxImportSource: 'vue', // jsx runtime: 'react', 'solid-js', etc.
+    }),
+  ],
+}
+```
+
+### `@folio/vue`
+
+Reactive composables and a render component built on top of `folio`:
+
+- `useContentList(prefix)` — reactive list of entries under a path prefix
+- `useContent(path)` — reactive single entry by path
+- `<FolioContent>` — renders an entry's MDX body; supports `loading` / `error` slots and a `components` prop for custom MDX components
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { useContentList, FolioContent } from '@folio/vue'
+
+const { entries, loading } = useContentList('/docs')
+const active = ref(null)
+</script>
+
+<template>
+  <ul>
+    <li v-for="e in entries" :key="e.path" @click="active = e">
+      {{ e.frontmatter.title }}
+    </li>
+  </ul>
+  <FolioContent v-if="active" :entry="active" />
+</template>
 ```
 
 ---
 
-## Testing guide
-
-Tests are in `packages/core/tests/` split into two directories:
-
-```text
-tests/
-  unit/         → pure function tests (scanner, transformer)
-  integration/  → real Vite dev server spun up per test
-fixtures/
-  basic.mdx       → plain markdown fixture
-  frontmatter.mdx → fixture with YAML frontmatter
-```
-
-### Run the full suite
+## Installation
 
 ```sh
-pnpm test
+# core plugin (required)
+pnpm add folio
+
+# Vue adapter
+pnpm add @folio/vue
 ```
 
-### Run a single file
+### Custom MDX components
 
-```sh
-pnpm test:core
-# or from inside packages/core:
-pnpm vitest run tests/unit/transformer.test.ts
+Pass a `components` map to `<FolioContent>` and use those components directly inside any `.mdx` file:
+
+```vue
+<FolioContent :entry="entry" :components="{ Button, InfoBox }" />
 ```
 
-### Watch mode while developing
-
-```sh
-pnpm test:watch
+```mdx
+<Button variant="primary">Get started</Button>
+<InfoBox type="tip">No extra setup required.</InfoBox>
 ```
 
-Vitest re-runs affected tests on every file save. This is the recommended mode when writing new features or fixing bugs — write the test first, watch it go red, then implement until it goes green.
+---
 
-### Integration tests
+## Scripts
 
-Integration tests in `tests/integration/plugin.test.ts` spin up a real Vite dev server using `createServer()`. The server is started once per test file and torn down after. If you add a new test that needs a running server, reuse the shared `server` instance — don't create a new one per test.
+Run everything from the **monorepo root**.
+
+| Script | What it does |
+| --- | --- |
+| `pnpm dev` | Start the docs site at `http://localhost:5173` |
+| `pnpm test` | Run all tests across all packages |
+| `pnpm test:core` | Run `packages/core` tests only |
+| `pnpm test:vue` | Run `packages/vue` tests only |
+| `pnpm test:watch` | Tests in watch mode |
+| `pnpm typecheck` | Type-check all packages |
+| `pnpm lint` | Lint all files (oxlint via vite+) |
+| `pnpm fmt` | Format all files (oxfmt via vite+) |
+| `pnpm fmt:check` | Check formatting without writing (CI) |
+| `pnpm build:packages` | Build all packages to `dist/` |
+| `pnpm clean` | Delete all `dist/` directories |
 
 ---
 
 ## Contributing
 
-1. `nvm use` — switch to the right Node version
-2. `pnpm install` — install deps
-3. Write a failing test first (`pnpm test:watch`)
+1. **Node 24** — `nvm use` picks up `.nvmrc`
+2. `pnpm install`
+3. Write a failing test first — `pnpm test:watch`
 4. Implement until green
-5. `pnpm typecheck:core` — make sure types are clean
-6. `git commit` — the pre-commit hook formats and lints for you
+5. `pnpm typecheck` — make sure types are clean
+6. `git commit` — the pre-commit hook formats and lints automatically
+
+All tests are BDD-style with [Vitest](https://vitest.dev) and use real fixture `.mdx` files — no mocked strings.
+
+Code style is enforced by **oxlint** (linting) and **oxfmt** (formatting) via [vite+](https://vite-plus.dev). No ESLint, no Prettier.
+
+---
+
+## License
+
+MIT

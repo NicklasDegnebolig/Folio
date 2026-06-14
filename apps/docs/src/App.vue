@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { useContentList, FolioContent } from '@folio/vue'
-import type { ContentEntry } from 'folio'
 import Button from './components/Button.vue'
+import InfoBox from './components/InfoBox.vue'
 
-const { entries, loading } = useContentList('/docs')
-const active = ref<ContentEntry | null>(null)
+const { entries, loading } = useContentList('/')
+
+const pathname = typeof window !== 'undefined' ? window.location.pathname : '/'
+
+const active = computed(
+  () =>
+    entries.value.find((e) => e.path === pathname) ?? entries.value[0] ?? null,
+)
 </script>
 
 <template>
@@ -16,10 +22,10 @@ const active = ref<ContentEntry | null>(null)
       <ul v-else style="list-style: none; padding: 0">
         <li v-for="e in entries" :key="e.path" style="margin-bottom: 0.5rem">
           <a
-            href="#"
-            @click.prevent="active = e"
+            :href="e.path"
             :style="{
               fontWeight: active?.path === e.path ? 'bold' : 'normal',
+              textDecoration: 'none',
               cursor: 'pointer',
             }"
           >
@@ -30,9 +36,12 @@ const active = ref<ContentEntry | null>(null)
     </nav>
 
     <main style="flex: 1">
-      <p v-if="!active" style="color: #888">← Select a page</p>
-      <FolioContent v-else :entry="active" :components="{ Button }">
-        <template #loading>Loading content…</template>
+      <FolioContent
+        v-if="active"
+        :entry="active"
+        :components="{ Button, InfoBox }"
+      >
+        <template #loading>Loading…</template>
       </FolioContent>
     </main>
   </div>

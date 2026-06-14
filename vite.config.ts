@@ -6,6 +6,7 @@ export default defineConfig({
     options: { typeAware: true },
     rules: {
       'no-console': ['error', { allow: ['warn', 'error'] }],
+      'no-control-regex': 'off',
     },
     overrides: [
       {

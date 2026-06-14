@@ -1,5 +1,5 @@
 import { join } from 'node:path'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { buildIndex } from '../../src/scanner.js'
 import { FileSystemSource } from '../../src/sources/filesystem.js'
 import { createQueryAPI } from '../../src/query.js'

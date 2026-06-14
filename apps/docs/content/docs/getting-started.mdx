@@ -1,101 +1,43 @@
 ---
 title: Getting Started
-description: Add folio to your Vite project in minutes
+description: Full documentation coming soon
 ---
 
 # Getting Started
 
-Install folio and your framework adapter:
+Full documentation is coming soon. Here's a quick preview of what folio makes possible.
 
-```sh
-pnpm add folio @folio/vue
-```
+## Components in MDX
 
-## Configure the plugin
+Pass any Vue component into `<FolioContent>` and use it directly inside your `.mdx` files:
 
-Add the Vite plugin in `vite.config.ts`:
+<InfoBox type="tip">
+  Components are provided at the call site — folio stays framework-agnostic and
+  never bundles your UI.
+</InfoBox>
 
-```ts
-import { folio } from 'folio'
-
-export default {
-  plugins: [folio({ jsxImportSource: 'vue' })],
-}
-```
-
-## Use the composables
-
-List all content under a prefix with `useContentList`:
-
-```vue
-<script setup>
-import { useContentList } from '@folio/vue'
-const { entries, loading } = useContentList('/docs')
-</script>
-
-<template>
-  <ul>
-    <li v-for="entry in entries" :key="entry.path">
-      {{ entry.frontmatter.title }}
-    </li>
-  </ul>
-</template>
-```
-
-Render a single entry with `useContent` and `<FolioContent>`:
-
-```vue
-<script setup>
-import { useContent, FolioContent } from '@folio/vue'
-const { entry } = useContent('/docs/getting-started')
-</script>
-
-<template>
-  <FolioContent :entry="entry" />
-</template>
-```
-
-## Import directly as a component
-
-You can also import `.md` and `.mdx` files directly — no API needed:
-
-```vue
-<script setup>
-import GettingStarted from '../content/docs/getting-started.mdx'
-</script>
-
-<template>
-  <GettingStarted />
-</template>
-```
-
-Both approaches work with any supported framework — swap `jsxImportSource: 'react'` or `'solid-js'` and everything continues to work.
-
-## Custom components in MDX
-
-Pass a `components` map to `<FolioContent>` and use those components directly in your `.mdx` files:
-
-```vue
-<FolioContent :entry="entry" :components="{ Button }" />
-```
-
-Then inside any `.mdx` file:
-
-```mdx
-<Button variant="primary" href="/docs">
-  Read the docs
-</Button>
-<Button variant="secondary">Learn more</Button>
-```
-
-Here's a live example — these buttons are rendered by the Vue `Button` component provided at the call site:
+## Buttons
 
 <Button variant="primary" href="#">
   Get started
 </Button>
-<Button variant="secondary" size="md">
-  Learn more
-</Button>
+<Button variant="secondary">Learn more</Button>
 <Button variant="ghost" size="sm">
   View source
 </Button>
+
+## Callout types
+
+<InfoBox>
+  This is a standard info callout. Use it for neutral context or background
+  information.
+</InfoBox>
+
+<InfoBox type="tip">
+  This is a tip. Use it to highlight a shortcut, best practice, or helpful hint.
+</InfoBox>
+
+<InfoBox type="warning">
+  This is a warning. Use it to flag something the reader should be careful
+  about.
+</InfoBox>

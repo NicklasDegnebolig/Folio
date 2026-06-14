@@ -23,12 +23,9 @@
   // Disable ESLint if installed — oxlint handles linting
   "eslint.enable": false,
 
-  // Disable built-in JS/TS validation — oxlint handles it
-  "javascript.validate.enable": false,
+  // oxc VSCode extension — inline lint + format feedback
+  "oxc.enable": true,
 
-  // Volar — use workspace TypeScript version
-  "vue.server.hybridMode": true,
-  "typescript.tsdk": "node_modules/typescript/lib",
 
   // File associations
   "files.associations": {

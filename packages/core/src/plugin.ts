@@ -18,6 +18,8 @@ const RESOLVED_INDEX_ID = '\0' + INDEX_ID
 const RESOLVED_QUERY_ID = '\0' + QUERY_ID
 const RESOLVED_ROUTES_ID = '\0' + ROUTES_ID
 
+const RESOLVED_VIRTUAL_FILTER = /^\u0000virtual:folio\/(index|query|routes)$/
+
 const defaultOptions = {
   contentDir: 'content',
   jsxImportSource: 'vue',
@@ -51,7 +53,7 @@ export function folio(userOptions: FolioOptions = {}): Plugin {
     },
 
     load: {
-      filter: { id: /^\0virtual:folio\/(index|query|routes)$/ },
+      filter: { id: RESOLVED_VIRTUAL_FILTER },
       async handler(id) {
         const source = new FileSystemSource(contentDir)
         const entries = await buildIndex(source, { locales: options.locales })

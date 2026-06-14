@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from 'vitest'
-import { defineComponent, nextTick } from 'vue'
+import { defineComponent } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import type { ContentEntry } from 'folio'
 import FolioContent from '../../src/FolioContent.vue'
@@ -40,7 +40,9 @@ describe('when she renders <FolioContent> with an entry', () => {
   it('she sees the error slot when body fails to load', async () => {
     const errorEntry: ContentEntry = {
       ...mockEntry,
-      body: vi.fn().mockRejectedValue(new Error('load failed')),
+      body: vi
+        .fn<() => Promise<never>>()
+        .mockRejectedValue(new Error('load failed')),
     }
     const wrapper = mount(FolioContent, {
       props: { entry: errorEntry },

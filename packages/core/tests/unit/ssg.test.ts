@@ -43,8 +43,9 @@ describe('when she runs SSG with a render function', () => {
     const titles: string[] = []
     await generatePages(entries, TMP, {
       render: async (path, entry) => {
-        titles.push(entry.frontmatter['title'] as string)
-        return `<html><title>${entry.frontmatter['title']}</title></html>`
+        const title = entry.frontmatter['title'] as string
+        titles.push(title)
+        return `<html><title>${title}</title></html>`
       },
     })
 
