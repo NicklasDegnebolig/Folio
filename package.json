@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter @nicklasdegnebolig/docs dev",
-    "build:packages": "tsdown",
+    "build:packages": "tsdown && pnpm --filter @nicklasdegnebolig/folio-vue build",
     "test": "pnpm test:core && pnpm test:vue",
     "test:core": "pnpm --filter @nicklasdegnebolig/folio test",
     "test:vue": "pnpm --filter @nicklasdegnebolig/folio-vue test",
