@@ -23,12 +23,12 @@ importers:
 
   apps/docs:
     dependencies:
-      '@folio/vue':
-        specifier: workspace:*
-        version: link:../../packages/vue
-      folio:
+      '@nicklasdegnebolig/folio':
         specifier: workspace:*
         version: link:../../packages/core
+      '@nicklasdegnebolig/folio-vue':
+        specifier: workspace:*
+        version: link:../../packages/vue
       vue:
         specifier: ^3.5.0
         version: 3.5.35(typescript@5.9.3)
@@ -70,15 +70,15 @@ importers:
 
   packages/vue:
     devDependencies:
+      '@nicklasdegnebolig/folio':
+        specifier: workspace:*
+        version: link:../core
       '@vitejs/plugin-vue':
         specifier: ^6.0.0
         version: 6.0.7(vite@8.0.16)(vue@3.5.35)
       '@vue/test-utils':
         specifier: ^2.4.0
         version: 2.4.11(@vue/compiler-dom@3.5.35)(vue@3.5.35)
-      folio:
-        specifier: workspace:*
-        version: link:../core
       jsdom:
         specifier: ^26.0.0
         version: 26.1.0

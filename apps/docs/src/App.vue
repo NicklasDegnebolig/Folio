@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useContentList, FolioContent } from '@folio/vue'
+import { useContentList, FolioContent } from '@nicklasdegnebolig/folio-vue'
 import Button from './components/Button.vue'
 import InfoBox from './components/InfoBox.vue'
 

@@ -2,7 +2,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { defineComponent } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
-import type { ContentEntry } from 'folio'
+import type { ContentEntry } from '@nicklasdegnebolig/folio'
 import { useContent, useContentList } from '../../src/composables.js'
 
 vi.mock('virtual:folio/query', () => ({

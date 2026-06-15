@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, shallowRef, type Component } from 'vue'
-import type { ContentEntry } from 'folio'
+import type { ContentEntry } from '@nicklasdegnebolig/folio'
 
 const props = defineProps<{
   entry: ContentEntry | null

@@ -8,7 +8,7 @@
     "jsxImportSource": "vue",
     "lib": ["ESNext", "DOM"],
     "paths": {
-      "@folio/vue": ["../../packages/vue/src/index.ts"]
+      "@nicklasdegnebolig/folio-vue": ["../../packages/vue/src/index.ts"]
     }
   },
   "include": ["src/**/*", "src/shims.d.ts", "../../packages/vue/src/**/*"]

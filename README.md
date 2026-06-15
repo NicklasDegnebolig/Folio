@@ -9,7 +9,7 @@ A Vite-native MDX content layer. Drop `.md` and `.mdx` files into your project a
 | Package | npm | Description |
 | --- | --- | --- |
 | [`folio`](packages/core) | `folio` | Vite plugin + query API. Framework-agnostic core. |
-| [`@folio/vue`](packages/vue) | `@folio/vue` | Reactive Vue composables and a `<FolioContent>` component. |
+| [`@nicklasdegnebolig/folio-vue`](packages/vue) | `@nicklasdegnebolig/folio-vue` | Reactive Vue composables and a `<FolioContent>` component. |
 
 ### `folio` — core
 
@@ -34,7 +34,7 @@ export default {
 }
 ```
 
-### `@folio/vue`
+### `@nicklasdegnebolig/folio-vue`
 
 Reactive composables and a render component built on top of `folio`:
 
@@ -67,10 +67,10 @@ const active = ref(null)
 
 ```sh
 # core plugin (required)
-pnpm add folio
+pnpm add @nicklasdegnebolig/folio
 
 # Vue adapter
-pnpm add @folio/vue
+pnpm add @nicklasdegnebolig/folio-vue
 ```
 
 ### Custom MDX components

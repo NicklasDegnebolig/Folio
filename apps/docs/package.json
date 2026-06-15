@@ -1,5 +1,5 @@
 {
-  "name": "@folio/docs",
+  "name": "@nicklasdegnebolig/docs",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,8 +8,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@folio/vue": "workspace:*",
-    "folio": "workspace:*",
+    "@nicklasdegnebolig/folio-vue": "workspace:*",
+    "@nicklasdegnebolig/folio": "workspace:*",
     "vue": "^3.5.0"
   },
   "devDependencies": {

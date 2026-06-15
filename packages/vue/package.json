@@ -1,5 +1,5 @@
 {
-  "name": "@folio/vue",
+  "name": "@nicklasdegnebolig/folio-vue",
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -26,13 +26,13 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "folio": "workspace:*",
+    "@nicklasdegnebolig/folio": "workspace:*",
     "vue": "^3.5.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/test-utils": "^2.4.0",
-    "folio": "workspace:*",
+    "@nicklasdegnebolig/folio": "workspace:*",
     "jsdom": "^26.0.0",
     "vue": "^3.5.0"
   }

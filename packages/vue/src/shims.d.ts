@@ -1,5 +1,5 @@
 declare module 'virtual:folio/query' {
-  import type { ContentEntry, ListOptions } from 'folio'
+  import type { ContentEntry, ListOptions } from '@nicklasdegnebolig/folio'
   export function listContent(
     prefix: string,
     options?: ListOptions,
@@ -11,6 +11,6 @@ declare module 'virtual:folio/query' {
 }
 
 declare module 'virtual:folio/index' {
-  import type { IndexEntry } from 'folio/internal/scanner'
+  import type { IndexEntry } from '@nicklasdegnebolig/folio/internal/scanner'
   export const index: IndexEntry[]
 }

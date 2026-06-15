@@ -1,5 +1,5 @@
 import { onMounted, ref } from 'vue'
-import type { ContentEntry, ListOptions } from 'folio'
+import type { ContentEntry, ListOptions } from '@nicklasdegnebolig/folio'
 import { listContent, getContent } from 'virtual:folio/query'
 
 export function useContentList(prefix: string, options?: ListOptions) {
